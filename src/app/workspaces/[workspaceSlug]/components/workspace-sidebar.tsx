@@ -1,37 +1,20 @@
+import { Suspense } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Suspense } from 'react'
 import type { WorkspaceRole } from '@/generated/prisma/enums'
-import { Avatar } from '@/components/ui/avatar'
+import { AvatarDropdown } from '@/components/avatar-dropdown'
+import { AvatarDropdownSkeleton } from '@/components/avatar-dropdown-skeleton'
 import { WorkspaceNavigation } from '@/app/workspaces/[workspaceSlug]/components/workspace-navigation'
 import { WorkspaceSelect } from '@/app/workspaces/[workspaceSlug]/components/workspace-select'
 import { WorkspaceSelectSkeleton } from '@/app/workspaces/[workspaceSlug]/components/workspace-select-skeleton'
 
-type WorkspaceSidebarProps = {
-    user: {
-        name?: string | null
-        email?: string | null
-        image?: string | null
-    }
-}
-
-function getInitials(name?: string | null) {
-    const parts = name?.trim().split(/\s+/).filter(Boolean) ?? []
-
-    return parts.length > 0
-        ? parts
-              .slice(0, 2)
-              .map((part) => part[0])
-              .join('')
-              .toUpperCase()
-        : '?'
-}
-
 export function WorkspaceSidebar({
-    user,
     workspaceSlug,
     role,
-}: WorkspaceSidebarProps & { workspaceSlug: string; role: WorkspaceRole }) {
+}: {
+    workspaceSlug: string
+    role: WorkspaceRole
+}) {
     return (
         <aside className="flex min-h-dvh w-[220px] shrink-0 flex-col border-r border-line bg-bg">
             <div className="p-4">
@@ -58,18 +41,10 @@ export function WorkspaceSidebar({
 
             <div className="flex-1" />
 
-            <div className="flex min-w-0 items-center gap-2.5 p-4">
-                <Avatar size="sm" aria-label={user.name ?? user.email ?? 'Usuário'}>
-                    {getInitials(user.name)}
-                </Avatar>
-                <div className="flex min-w-0 flex-col">
-                    <span className="truncate text-sm leading-5 font-medium text-text">
-                        {user.name ?? 'Usuário'}
-                    </span>
-                    <span className="truncate text-xs leading-[18px] text-text-muted">
-                        {user.email ?? ''}
-                    </span>
-                </div>
+            <div className="p-4">
+                <Suspense fallback={<AvatarDropdownSkeleton />}>
+                    <AvatarDropdown />
+                </Suspense>
             </div>
         </aside>
     )

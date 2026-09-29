@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
 import { WorkspaceSidebar } from '@/app/workspaces/[workspaceSlug]/components/workspace-sidebar'
-import { requireAuthenticatedUser } from '@/lib/authentication'
 import { requireWorkspaceMember } from '@/lib/workspace-authorization'
 
 export default async function WorkspaceLayout({
@@ -13,12 +12,10 @@ export default async function WorkspaceLayout({
     const { workspaceSlug } = await params
 
     const membership = await requireWorkspaceMember(workspaceSlug)
-    const user = await requireAuthenticatedUser()
 
     return (
         <div className="flex min-h-dvh bg-bg">
             <WorkspaceSidebar
-                user={user}
                 workspaceSlug={workspaceSlug}
                 role={membership.role}
             />

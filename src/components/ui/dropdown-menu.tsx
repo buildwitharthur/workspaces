@@ -98,7 +98,7 @@ export function DropdownMenuContent({
 
     useEffect(() => {
         if (open) {
-            const firstItem = contentRef.current?.querySelector<HTMLButtonElement>('[role^="menuitem"]:not(:disabled)')
+            const firstItem = contentRef.current?.querySelector<HTMLElement>('[role^="menuitem"]:not(:disabled)')
             firstItem?.focus()
         }
     }, [open, contentRef])
@@ -107,11 +107,11 @@ export function DropdownMenuContent({
 
     const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         const items = Array.from(
-            contentRef.current?.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]:not(:disabled)') ?? [],
+            contentRef.current?.querySelectorAll<HTMLElement>('[role^="menuitem"]:not(:disabled)') ?? [],
         )
-        const current = document.activeElement as HTMLButtonElement
+        const current = document.activeElement as HTMLElement
         const index = items.indexOf(current)
-        const focus = (item: HTMLButtonElement | undefined) => item?.focus()
+        const focus = (item: HTMLElement | undefined) => item?.focus()
 
         if (event.key === 'ArrowDown') {
             event.preventDefault()
@@ -154,12 +154,22 @@ export function DropdownMenuContent({
     )
 }
 
+type DropdownMenuItemChildProps = {
+    className?: string
+    onClick?: (event: MouseEvent<HTMLElement>) => void
+    role?: string
+    'aria-checked'?: boolean
+    'aria-disabled'?: boolean
+    tabIndex?: number
+}
+
 export function DropdownMenuItem({
     className,
     children,
     variant = 'default',
     checked,
     disabled = false,
+    asChild = false,
     onSelect,
 }: {
     className?: string
@@ -167,9 +177,41 @@ export function DropdownMenuItem({
     variant?: 'default' | 'danger'
     checked?: boolean
     disabled?: boolean
+    asChild?: boolean
     onSelect?: () => void
 }) {
     const { close } = useMenuContext()
+    const itemClassName = twMerge(
+        [
+            'flex min-h-control-sm w-full items-center gap-2.5 rounded-lg border-0 bg-transparent px-2.5 py-1.5',
+            'text-left text-sm leading-5 font-medium text-text-2',
+            'hover:bg-surface-raised focus-visible:bg-surface-raised focus-visible:outline-none',
+            'disabled:cursor-not-allowed disabled:text-text-subtle disabled:hover:bg-transparent',
+            variant === 'danger' ? 'text-danger-text' : '',
+            checked ? 'bg-surface-raised' : '',
+        ].join(' '),
+        className,
+    )
+
+    const handleClick = () => {
+        if (disabled) return
+        onSelect?.()
+        close()
+    }
+
+    if (asChild && isValidElement<DropdownMenuItemChildProps>(children)) {
+        return cloneElement(children, {
+            role: checked === undefined ? 'menuitem' : 'menuitemradio',
+            'aria-checked': checked,
+            'aria-disabled': disabled,
+            tabIndex: -1,
+            className: twMerge(itemClassName, children.props.className),
+            onClick: (event: MouseEvent<HTMLElement>) => {
+                children.props.onClick?.(event)
+                handleClick()
+            },
+        })
+    }
 
     return (
         <button
@@ -179,22 +221,8 @@ export function DropdownMenuItem({
             aria-disabled={disabled}
             disabled={disabled}
             tabIndex={-1}
-            className={twMerge(
-                [
-                    'flex min-h-control-sm w-full items-center gap-2.5 rounded-lg border-0 bg-transparent px-2.5 py-1.5',
-                    'text-left text-sm leading-5 font-medium text-text-2',
-                    'hover:bg-surface-raised focus-visible:bg-surface-raised focus-visible:outline-none',
-                    'disabled:cursor-not-allowed disabled:text-text-subtle disabled:hover:bg-transparent',
-                    variant === 'danger' ? 'text-danger-text' : '',
-                    checked ? 'bg-surface-raised' : '',
-                ].join(' '),
-                className,
-            )}
-            onClick={() => {
-                if (disabled) return
-                onSelect?.()
-                close()
-            }}
+            className={itemClassName}
+            onClick={handleClick}
         >
             {children}
         </button>

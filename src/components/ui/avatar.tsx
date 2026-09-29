@@ -15,8 +15,16 @@ const avatarVariants = tv({
     },
 })
 
-export type AvatarProps = React.ComponentProps<'span'> & VariantProps<typeof avatarVariants>
+export type AvatarProps = React.ComponentProps<'span'> &
+    VariantProps<typeof avatarVariants> & {
+        src?: string | null
+        alt?: string
+    }
 
-export function Avatar({ className, size, ...props }: AvatarProps) {
-    return <span className={twMerge(avatarVariants({ size }), className)} {...props} />
+export function Avatar({ className, size, src, alt = '', children, ...props }: AvatarProps) {
+    return (
+        <span className={twMerge(avatarVariants({ size }), className)} {...props}>
+            {src ? <img src={src} alt={alt} className="size-full rounded-pill object-cover" /> : children}
+        </span>
+    )
 }
