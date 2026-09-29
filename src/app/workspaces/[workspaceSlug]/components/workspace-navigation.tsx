@@ -21,6 +21,12 @@ export function WorkspaceNavigation({ workspaceSlug, role }: WorkspaceNavigation
             icon: LayoutGrid,
             exact: true,
         },
+       
+        {
+            label: 'Área comum',
+            href: `${basePath}/area-comum`,
+            icon: Home,
+        },
         {
             label: 'Membros',
             href: `${basePath}/members`,
