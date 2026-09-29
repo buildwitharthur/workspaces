@@ -32,8 +32,23 @@ function useDialogContext() {
     return context
 }
 
-export function Dialog({ children, className }: { children: ReactNode; className?: string }) {
-    const [open, setOpen] = useState(false)
+export function Dialog({
+    children,
+    className,
+    open: controlledOpen,
+    onOpenChange,
+}: {
+    children: ReactNode
+    className?: string
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
+}) {
+    const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
+    const open = controlledOpen ?? uncontrolledOpen
+    const setOpen = (nextOpen: boolean) => {
+        if (controlledOpen === undefined) setUncontrolledOpen(nextOpen)
+        onOpenChange?.(nextOpen)
+    }
     const dialogRef = useRef<HTMLDialogElement>(null)
     const lastActiveElement = useRef<HTMLElement | null>(null)
     const id = useId()
