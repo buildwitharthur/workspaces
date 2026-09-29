@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import type { ActionResult } from '@/types/action-result'
-import { Session, User } from 'next-auth'
+import { User } from 'next-auth'
 
 export async function getCurrentUser() {
     const session = await auth()

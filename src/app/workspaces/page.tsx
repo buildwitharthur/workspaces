@@ -1,7 +1,13 @@
+import { Header } from '@/app/workspaces/components/header'
 import { requireAuthenticatedUser } from '@/lib/authentication'
 
 export default async function Page() {
-    await requireAuthenticatedUser()
+    const user = await requireAuthenticatedUser()
 
-    return <main>Workspaces</main>
+    return (
+        <div className="min-h-dvh">
+            <Header user={user} />
+            <main />
+        </div>
+    )
 }
