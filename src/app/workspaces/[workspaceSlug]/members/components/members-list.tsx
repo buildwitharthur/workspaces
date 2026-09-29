@@ -6,7 +6,7 @@ export async function MembersList({
 }: {
     workspaceSlug: string
 }) {
-    const members = await getMembers(workspaceSlug)
+    const { members, currentUserRole } = await getMembers(workspaceSlug)
 
-    return <MembersData members={members} />
+    return <MembersData members={members} currentUserRole={currentUserRole} />
 }

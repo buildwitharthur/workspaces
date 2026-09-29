@@ -15,9 +15,14 @@ export type MemberListItem = {
     isCurrentUser: boolean
 }
 
+export type MembersResult = {
+    members: MemberListItem[]
+    currentUserRole: WorkspaceRoleType
+}
+
 export async function getMembers(
     workspaceSlug: string,
-): Promise<MemberListItem[]> {
+): Promise<MembersResult> {
     const currentMembership = await requireWorkspaceMember(workspaceSlug)
 
     if (
@@ -49,14 +54,17 @@ export async function getMembers(
         },
     })
 
-    return memberships.map((member) => ({
-        id: member.id,
-        userId: member.userId,
-        name: member.user.name,
-        email: member.user.email,
-        image: member.user.image,
-        role: member.role,
-        joinedAt: member.createdAt,
-        isCurrentUser: member.userId === currentMembership.userId,
-    }))
+    return {
+        members: memberships.map((member) => ({
+            id: member.id,
+            userId: member.userId,
+            name: member.user.name,
+            email: member.user.email,
+            image: member.user.image,
+            role: member.role,
+            joinedAt: member.createdAt,
+            isCurrentUser: member.userId === currentMembership.userId,
+        })),
+        currentUserRole: currentMembership.role,
+    }
 }

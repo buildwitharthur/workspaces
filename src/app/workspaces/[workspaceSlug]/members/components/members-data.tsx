@@ -2,12 +2,13 @@ import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { WorkspaceRole } from '@/generated/prisma/enums'
 import type { MemberListItem } from './get-members'
+import { MemberActionsDropdown } from './member-actions-dropdown'
 
-const roleVariants = {
+const roleVariants: Record<WorkspaceRole, 'success' | 'info' | 'neutral'> = {
     [WorkspaceRole.OWNER]: 'success',
     [WorkspaceRole.ADMIN]: 'info',
     [WorkspaceRole.MEMBER]: 'neutral',
-} as const
+}
 
 function getInitials(name: string | null) {
     const parts = name?.trim().split(/\s+/).filter(Boolean) ?? []
@@ -27,10 +28,37 @@ function formatDate(date: Date) {
     return new Intl.DateTimeFormat('pt-BR').format(date)
 }
 
-export function MembersData({ members }: { members: MemberListItem[] }) {
+function memberHasActions(member: MemberListItem, currentUserRole: WorkspaceRole) {
+    const canChangeRole =
+        currentUserRole === WorkspaceRole.OWNER &&
+        !member.isCurrentUser &&
+        member.role !== WorkspaceRole.OWNER
+
+    const canRemove =
+        !member.isCurrentUser &&
+        member.role !== WorkspaceRole.OWNER &&
+        (currentUserRole === WorkspaceRole.OWNER ||
+            (currentUserRole === WorkspaceRole.ADMIN &&
+                member.role === WorkspaceRole.MEMBER))
+
+    return canChangeRole || canRemove
+}
+
+export function MembersData({
+    members,
+    currentUserRole,
+}: {
+    members: MemberListItem[]
+    currentUserRole: WorkspaceRole
+}) {
+    const hasActionColumn = members.some((member) =>
+        memberHasActions(member, currentUserRole),
+    )
+    const columnCount = hasActionColumn ? 5 : 4
+
     return (
         <div className="mt-8 overflow-x-auto rounded-lg border border-line bg-surface">
-            <table className="w-full min-w-[680px] border-collapse">
+            <table className="w-full min-w-[720px] border-collapse">
                 <thead>
                     <tr className="border-b border-line">
                         <th scope="col" className="px-4 py-2.5 text-left text-xs leading-4 font-medium text-text-muted">
@@ -45,12 +73,17 @@ export function MembersData({ members }: { members: MemberListItem[] }) {
                         <th scope="col" className="px-4 py-2.5 text-left text-xs leading-4 font-medium text-text-muted">
                             Entrou em
                         </th>
+                        {hasActionColumn ? (
+                            <th scope="col" className="w-14 px-3 py-2.5 text-right">
+                                <span className="sr-only">Ações</span>
+                            </th>
+                        ) : null}
                     </tr>
                 </thead>
                 <tbody>
                     {members.length === 0 ? (
                         <tr>
-                            <td colSpan={4} className="px-4 py-7 text-center text-sm text-text-muted">
+                            <td colSpan={columnCount} className="px-4 py-7 text-center text-sm text-text-muted">
                                 Nenhum membro encontrado.
                             </td>
                         </tr>
@@ -87,6 +120,14 @@ export function MembersData({ members }: { members: MemberListItem[] }) {
                                 <td className="px-4 py-3 text-sm leading-5 text-text-muted">
                                     {formatDate(member.joinedAt)}
                                 </td>
+                                {hasActionColumn ? (
+                                    <td className="px-3 py-2 text-right">
+                                        <MemberActionsDropdown
+                                            member={member}
+                                            currentUserRole={currentUserRole}
+                                        />
+                                    </td>
+                                ) : null}
                             </tr>
                         ))
                     )}
