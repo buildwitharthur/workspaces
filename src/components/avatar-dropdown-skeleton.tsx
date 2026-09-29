@@ -1,4 +1,4 @@
-import type { AvatarDropdownVariant } from '@/components/avatar-dropdown'
+import type { AvatarDropdownVariant } from '@/components/user-menu'
 
 export function AvatarDropdownSkeleton({
     variant = 'default',

@@ -38,7 +38,7 @@ export function WorkspaceSelectData({
 
     return (
         <DropdownMenu className="block w-full">
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
                 <button
                     type="button"
                     className="flex w-full items-center gap-3 rounded-md border border-line bg-surface p-2 text-left transition-colors hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-2 "

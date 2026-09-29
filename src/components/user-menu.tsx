@@ -2,7 +2,6 @@
 
 import { ChevronDown, LayoutGrid, LogOut } from 'lucide-react'
 import Link from 'next/link'
-import type { AvatarDropdownVariant } from '@/components/avatar-dropdown'
 import { signOutAction } from '@/components/sign-out'
 import { Avatar } from '@/components/ui/avatar'
 import {
@@ -13,39 +12,33 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-type AvatarDropdownMenuProps = {
-    user: {
-        name: string | null
-        email: string | null
-        image: string | null
-    }
-    variant?: AvatarDropdownVariant
+export type AvatarDropdownVariant = 'default' | 'extended'
+
+export type UserMenuUser = {
+    name: string | null
+    email: string | null
+    image: string | null
 }
 
-function getInitials(name: string | null) {
-    const parts = name?.trim().split(/\s+/).filter(Boolean) ?? []
-
-    if (parts.length === 0) {
-        return '?'
-    }
-
-    return parts
-        .slice(0, 2)
-        .map((part) => part[0])
-        .join('')
-        .toUpperCase()
+function getDisplayName(user: UserMenuUser) {
+    return user.name?.trim() || user.email?.split('@')[0] || 'Usuário'
 }
 
-export function AvatarDropdownMenu({
+export function UserMenu({
     user,
     variant = 'default',
-}: AvatarDropdownMenuProps) {
-    const accessibleName = user.name ?? user.email ?? 'Usuário'
+}: {
+    user: UserMenuUser
+    variant?: AvatarDropdownVariant
+}) {
+    const displayName = getDisplayName(user)
+    const displayEmail = user.email ?? ''
+    const initial = displayName.charAt(0).toUpperCase()
     const isExtended = variant === 'extended'
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
                 <button
                     type="button"
                     aria-label="Abrir menu da conta"
@@ -58,19 +51,19 @@ export function AvatarDropdownMenu({
                     <Avatar
                         size="md"
                         src={user.image}
-                        alt={accessibleName}
+                        alt={displayName}
                         className="shrink-0"
                     >
-                        {getInitials(user.name)}
+                        {initial}
                     </Avatar>
                     {isExtended ? (
                         <div className="min-w-0 flex-1 overflow-hidden text-left">
                             <p className="truncate text-sm leading-5 font-semibold text-text">
-                                {user.name ?? 'Usuário'}
+                                {displayName}
                             </p>
-                            {user.email ? (
+                            {displayEmail ? (
                                 <p className="truncate text-xs leading-[18px] text-text-muted">
-                                    {user.email}
+                                    {displayEmail}
                                 </p>
                             ) : null}
                         </div>
@@ -85,10 +78,9 @@ export function AvatarDropdownMenu({
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
+                align="end"
                 aria-label="Menu da conta"
                 className="w-[260px]"
-                align="start"
-                side="top"
             >
                 {!isExtended ? (
                     <>
@@ -96,22 +88,21 @@ export function AvatarDropdownMenu({
                             <Avatar
                                 size="md"
                                 src={user.image}
-                                alt={accessibleName}
+                                alt={displayName}
                             >
-                                {getInitials(user.name)}
+                                {initial}
                             </Avatar>
                             <div className="min-w-0">
                                 <p className="truncate text-sm leading-5 font-semibold text-text">
-                                    {user.name ?? 'Usuário'}
+                                    {displayName}
                                 </p>
-                                {user.email ? (
+                                {displayEmail ? (
                                     <p className="truncate text-xs leading-[18px] text-text-muted">
-                                        {user.email}
+                                        {displayEmail}
                                     </p>
                                 ) : null}
                             </div>
                         </div>
-
                         <DropdownMenuSeparator />
                     </>
                 ) : null}

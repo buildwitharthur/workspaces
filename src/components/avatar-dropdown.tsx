@@ -1,7 +1,10 @@
-import { AvatarDropdownMenu } from '@/components/avatar-dropdown-menu'
+import {
+    UserMenu,
+    type AvatarDropdownVariant,
+} from '@/components/user-menu'
 import { requireAuthPage } from '@/lib/authentication'
 
-export type AvatarDropdownVariant = 'default' | 'extended'
+export type { AvatarDropdownVariant } from '@/components/user-menu'
 
 export async function AvatarDropdown({
     variant = 'default',
@@ -11,7 +14,7 @@ export async function AvatarDropdown({
     const user = await requireAuthPage()
 
     return (
-        <AvatarDropdownMenu
+        <UserMenu
             user={{
                 name: user.name ?? null,
                 email: user.email ?? null,

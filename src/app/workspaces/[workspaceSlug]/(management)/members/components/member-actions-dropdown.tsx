@@ -43,7 +43,7 @@ export function MemberActionsDropdown({
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
                 <button
                     type="button"
                     aria-label={`Ações de ${member.name ?? 'membro'}`}

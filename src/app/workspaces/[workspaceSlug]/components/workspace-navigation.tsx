@@ -5,6 +5,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { WorkspaceRole } from '@/generated/prisma/enums'
 import { useWorkspaceStore } from '@/store/workspace'
+import {
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+} from '@/components/ui/sidebar'
 
 export function WorkspaceNavigation() {
     const workspaceSlug = useWorkspaceStore((state) => state.workspaceSlug)
@@ -45,7 +50,7 @@ export function WorkspaceNavigation() {
 
     return (
         <nav aria-label="Navegação do workspace">
-            <ul className="flex flex-col gap-1">
+            <SidebarMenu>
                 {navigationItems
                     .filter((item) => !item.adminOnly || canManageWorkspace)
                     .map((item) => {
@@ -56,8 +61,9 @@ export function WorkspaceNavigation() {
                         const Icon = item.icon
 
                         return (
-                            <li key={item.href}>
-                                <Link
+                            <SidebarMenuItem key={item.href}>
+                                <SidebarMenuButton asChild isActive={isActive}>
+                                    <Link
                                     href={item.href}
                                     aria-current={isActive ? 'page' : undefined}
                                     className={[
@@ -78,11 +84,12 @@ export function WorkspaceNavigation() {
                                         ].join(' ')}
                                     />
                                     <span>{item.label}</span>
-                                </Link>
-                            </li>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                         )
                     })}
-            </ul>
+            </SidebarMenu>
         </nav>
     )
 }

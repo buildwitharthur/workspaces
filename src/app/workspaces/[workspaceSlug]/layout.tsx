@@ -1,7 +1,12 @@
 import type { ReactNode } from 'react'
-import { WorkspaceSidebar } from '@/app/workspaces/[workspaceSlug]/components/workspace-sidebar'
+import { AppSidebar } from '@/components/app-sidebar'
 import { requireWorkspaceMemberPage } from '@/lib/workspace-authorization'
 import { WorkspaceStoreSync } from '@/store/workspace'
+import {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+} from '@/components/ui/sidebar'
 
 export default async function WorkspaceLayout({
     children,
@@ -15,13 +20,18 @@ export default async function WorkspaceLayout({
     const membership = await requireWorkspaceMemberPage(workspaceSlug)
 
     return (
-        <div className="flex min-h-dvh bg-bg">
+        <SidebarProvider>
             <WorkspaceStoreSync
                 workspaceSlug={workspaceSlug}
                 role={membership.role}
             />
-            <WorkspaceSidebar workspaceSlug={workspaceSlug} />
-            <main className="min-w-0 flex-1">{children}</main>
-        </div>
+            <AppSidebar workspaceSlug={workspaceSlug} />
+            <SidebarInset>
+                <header className="flex h-12 items-center border-b border-line px-4 md:hidden">
+                    <SidebarTrigger />
+                </header>
+                {children}
+            </SidebarInset>
+        </SidebarProvider>
     )
 }
