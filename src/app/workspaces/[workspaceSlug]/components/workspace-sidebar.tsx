@@ -44,8 +44,10 @@ export function WorkspaceSidebar({
             <div className="flex-1" />
 
             <div className="p-4">
-                <Suspense fallback={<AvatarDropdownSkeleton />}>
-                    <AvatarDropdown />
+                <Suspense
+                    fallback={<AvatarDropdownSkeleton variant="extended" />}
+                >
+                    <AvatarDropdown variant="extended" />
                 </Suspense>
             </div>
         </aside>

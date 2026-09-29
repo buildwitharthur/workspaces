@@ -1,7 +1,8 @@
 'use client'
 
-import { LayoutGrid, LogOut } from 'lucide-react'
+import { ChevronDown, LayoutGrid, LogOut } from 'lucide-react'
 import Link from 'next/link'
+import type { AvatarDropdownVariant } from '@/components/avatar-dropdown'
 import { signOutAction } from '@/components/sign-out'
 import { Avatar } from '@/components/ui/avatar'
 import {
@@ -11,7 +12,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { signOut } from '@/lib/auth'
 
 type AvatarDropdownMenuProps = {
     user: {
@@ -19,6 +19,7 @@ type AvatarDropdownMenuProps = {
         email: string | null
         image: string | null
     }
+    variant?: AvatarDropdownVariant
 }
 
 function getInitials(name: string | null) {
@@ -35,8 +36,12 @@ function getInitials(name: string | null) {
         .toUpperCase()
 }
 
-export function AvatarDropdownMenu({ user }: AvatarDropdownMenuProps) {
+export function AvatarDropdownMenu({
+    user,
+    variant = 'default',
+}: AvatarDropdownMenuProps) {
     const accessibleName = user.name ?? user.email ?? 'Usuário'
+    const isExtended = variant === 'extended'
 
     return (
         <DropdownMenu>
@@ -44,35 +49,72 @@ export function AvatarDropdownMenu({ user }: AvatarDropdownMenuProps) {
                 <button
                     type="button"
                     aria-label="Abrir menu da conta"
-                    className="rounded-pill focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-2"
+                    className={
+                        isExtended
+                            ? 'flex w-full min-w-0 max-w-full items-center gap-2.5 overflow-hidden rounded-pill text-left focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-2'
+                            : 'rounded-pill focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-2'
+                    }
                 >
-                    <Avatar size="md" src={user.image} alt={accessibleName}>
+                    <Avatar
+                        size="md"
+                        src={user.image}
+                        alt={accessibleName}
+                        className="shrink-0"
+                    >
                         {getInitials(user.name)}
                     </Avatar>
+                    {isExtended ? (
+                        <div className="min-w-0 flex-1 overflow-hidden text-left">
+                            <p className="truncate text-sm leading-5 font-semibold text-text">
+                                {user.name ?? 'Usuário'}
+                            </p>
+                            {user.email ? (
+                                <p className="truncate text-xs leading-[18px] text-text-muted">
+                                    {user.email}
+                                </p>
+                            ) : null}
+                        </div>
+                    ) : null}
+                    {isExtended ? (
+                        <ChevronDown
+                            aria-hidden="true"
+                            className="size-4 shrink-0 text-text-muted"
+                        />
+                    ) : null}
                 </button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
                 aria-label="Menu da conta"
                 className="w-[260px]"
+                align="start"
+                side="top"
             >
-                <div className="flex min-w-0 items-center gap-2.5 px-2.5 py-2">
-                    <Avatar size="md" src={user.image} alt={accessibleName}>
-                        {getInitials(user.name)}
-                    </Avatar>
-                    <div className="min-w-0">
-                        <p className="truncate text-sm leading-5 font-semibold text-text">
-                            {user.name ?? 'Usuário'}
-                        </p>
-                        {user.email ? (
-                            <p className="truncate text-xs leading-[18px] text-text-muted">
-                                {user.email}
-                            </p>
-                        ) : null}
-                    </div>
-                </div>
+                {!isExtended ? (
+                    <>
+                        <div className="flex min-w-0 items-center gap-2.5 px-2.5 py-2">
+                            <Avatar
+                                size="md"
+                                src={user.image}
+                                alt={accessibleName}
+                            >
+                                {getInitials(user.name)}
+                            </Avatar>
+                            <div className="min-w-0">
+                                <p className="truncate text-sm leading-5 font-semibold text-text">
+                                    {user.name ?? 'Usuário'}
+                                </p>
+                                {user.email ? (
+                                    <p className="truncate text-xs leading-[18px] text-text-muted">
+                                        {user.email}
+                                    </p>
+                                ) : null}
+                            </div>
+                        </div>
 
-                <DropdownMenuSeparator />
+                        <DropdownMenuSeparator />
+                    </>
+                ) : null}
 
                 <DropdownMenuItem asChild>
                     <Link href="/workspaces">

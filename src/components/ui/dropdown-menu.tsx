@@ -27,18 +27,28 @@ const MenuContext = createContext<MenuContextValue | null>(null)
 
 function useMenuContext() {
     const context = useContext(MenuContext)
-    if (!context) throw new Error('Dropdown menu components must be used inside <DropdownMenu>.')
+    if (!context)
+        throw new Error(
+            'Dropdown menu components must be used inside <DropdownMenu>.',
+        )
     return context
 }
 
-export function DropdownMenu({ children, className }: { children: ReactNode; className?: string }) {
+export function DropdownMenu({
+    children,
+    className,
+}: {
+    children: ReactNode
+    className?: string
+}) {
     const [open, setOpen] = useState(false)
     const triggerRef = useRef<HTMLElement>(null)
     const contentRef = useRef<HTMLDivElement>(null)
 
     const close = (restoreFocus = true) => {
         setOpen(false)
-        if (restoreFocus) window.setTimeout(() => triggerRef.current?.focus(), 0)
+        if (restoreFocus)
+            window.setTimeout(() => triggerRef.current?.focus(), 0)
     }
 
     useEffect(() => {
@@ -46,7 +56,11 @@ export function DropdownMenu({ children, className }: { children: ReactNode; cla
 
         const onPointerDown = (event: PointerEvent) => {
             const target = event.target as Node
-            if (!contentRef.current?.contains(target) && !triggerRef.current?.contains(target)) close(false)
+            if (
+                !contentRef.current?.contains(target) &&
+                !triggerRef.current?.contains(target)
+            )
+                close(false)
         }
         const onResize = () => close(false)
         const onScroll = () => close(false)
@@ -62,15 +76,25 @@ export function DropdownMenu({ children, className }: { children: ReactNode; cla
     }, [open])
 
     return (
-        <MenuContext.Provider value={{ open, setOpen, close, triggerRef, contentRef }}>
-            <span className={twMerge('relative inline-block', className)}>{children}</span>
+        <MenuContext.Provider
+            value={{ open, setOpen, close, triggerRef, contentRef }}
+        >
+            <span className={twMerge('relative inline-block', className)}>
+                {children}
+            </span>
         </MenuContext.Provider>
     )
 }
 
 export function DropdownMenuTrigger({ children }: { children: ReactElement }) {
     const { open, setOpen, triggerRef } = useMenuContext()
-    if (!isValidElement<{ onClick?: (event: MouseEvent) => void; [key: string]: unknown }>(children)) return children
+    if (
+        !isValidElement<{
+            onClick?: (event: MouseEvent) => void
+            [key: string]: unknown
+        }>(children)
+    )
+        return children
 
     // The trigger is cloned to preserve the caller's native button/link semantics.
     // eslint-disable-next-line react-hooks/refs
@@ -89,16 +113,23 @@ export function DropdownMenuContent({
     className,
     children,
     'aria-label': ariaLabel,
+    side = 'bottom',
+    align = 'end',
 }: {
     className?: string
     children: ReactNode
     'aria-label'?: string
+    side?: 'top' | 'bottom'
+    align?: 'start' | 'end'
 }) {
     const { open, close, contentRef } = useMenuContext()
 
     useEffect(() => {
         if (open) {
-            const firstItem = contentRef.current?.querySelector<HTMLElement>('[role^="menuitem"]:not(:disabled)')
+            const firstItem = contentRef.current?.querySelector<HTMLElement>(
+                '[role^="menuitem"]:not(:disabled)',
+            )
+
             firstItem?.focus()
         }
     }, [open, contentRef])
@@ -107,17 +138,24 @@ export function DropdownMenuContent({
 
     const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         const items = Array.from(
-            contentRef.current?.querySelectorAll<HTMLElement>('[role^="menuitem"]:not(:disabled)') ?? [],
+            contentRef.current?.querySelectorAll<HTMLElement>(
+                '[role^="menuitem"]:not(:disabled)',
+            ) ?? [],
         )
+
         const current = document.activeElement as HTMLElement
+
         const index = items.indexOf(current)
+
         const focus = (item: HTMLElement | undefined) => item?.focus()
 
         if (event.key === 'ArrowDown') {
             event.preventDefault()
+
             focus(items[(index + 1 + items.length) % items.length])
         } else if (event.key === 'ArrowUp') {
             event.preventDefault()
+
             focus(items[(index - 1 + items.length) % items.length])
         } else if (event.key === 'Home') {
             event.preventDefault()
@@ -141,9 +179,14 @@ export function DropdownMenuContent({
             tabIndex={-1}
             className={twMerge(
                 [
-                    'absolute top-full right-0 z-40 mt-1 min-w-[220px] max-w-[calc(100vw-16px)] p-1.5',
+                    'absolute z-40 min-w-[220px] max-w-[calc(100vw-16px)] p-1.5',
+
+                    side === 'top' ? 'bottom-full mb-1' : 'top-full mt-1',
+
+                    align === 'start' ? 'left-0' : 'right-0',
+
                     'rounded-[12px] border border-line bg-surface shadow-[var(--shadow-popover)]',
-                    'motion-safe:animate-[ui-pop_0.16s_ease-out_both] motion-reduce:animate-none',
+                    'motion-safe:animate-[ui_pop_0.16s_ease-out_both] motion-reduce:animate-none',
                 ].join(' '),
                 className,
             )}
@@ -230,5 +273,10 @@ export function DropdownMenuItem({
 }
 
 export function DropdownMenuSeparator({ className }: { className?: string }) {
-    return <div role="separator" className={twMerge('my-1.5 mx-1 h-px bg-line', className)} />
+    return (
+        <div
+            role="separator"
+            className={twMerge('my-1.5 mx-1 h-px bg-line', className)}
+        />
+    )
 }
