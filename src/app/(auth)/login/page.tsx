@@ -1,27 +1,39 @@
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
-import { auth } from '@/lib/auth'
+import { signIn } from '@/lib/auth'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { signInWithEmail, signInWithGoogle } from './actions'
 
-type LoginPageProps = {
-    searchParams: Promise<Record<string, string | string[] | undefined>>
-}
+import { getCurrentUser } from '@/lib/authentication'
+import z from 'zod'
 
-const errorMessages = {
-    email: 'Não foi possível enviar o link de acesso. Tente novamente.',
-    oauth: 'Não foi possível entrar com Google. Tente novamente.',
-    generic: 'Não foi possível concluir o login. Tente novamente.',
-} as const
+export default async function Page() {
+    const user = await getCurrentUser()
 
-export default async function Page({ searchParams }: LoginPageProps) {
-    const params = await searchParams
-    const error = typeof params.error === 'string' ? params.error : undefined
-    const errorMessage =
-        errorMessages[error as keyof typeof errorMessages] ??
-        (error ? errorMessages.generic : undefined)
+    if (user) redirect('/workspaces')
+
+    const signInWithGoogle = async () => {
+        'use server'
+        await signIn('google')
+    }
+
+    const signInWithEmail = async (formData: FormData) => {
+        'use server'
+        const email = formData.get('email') as string
+
+        const parsed = z
+            .object({
+                email: z
+                    .string('Insira um formato de e-mail inválido')
+                    .min(1, 'Insira um formato de e-mail inválido')
+                    .trim()
+                    .email('Insira um formato de e-mail inválido'),
+            })
+            .safeParse({ email })
+
+        await signIn('resend', parsed.data)
+    }
 
     return (
         <main className="flex min-h-dvh flex-col">
@@ -42,15 +54,6 @@ export default async function Page({ searchParams }: LoginPageProps) {
                     <p className="mt-1.5 text-text-muted">
                         Entre para acessar seus workspaces.
                     </p>
-
-                    {errorMessage ? (
-                        <p
-                            role="alert"
-                            className="mt-4 text-[13px] leading-5 text-danger-text"
-                        >
-                            {errorMessage}
-                        </p>
-                    ) : null}
 
                     <form
                         action={signInWithEmail}

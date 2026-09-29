@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import type { Membership } from '@/generated/prisma/client'
 import { db } from '@/lib/db'
 import type { ActionResult } from '@/types/action-result'
-import { getCurrentUser } from '@/lib/authentication'
+import { requireAuthAction, requireAuthPage } from '@/lib/authentication'
 
 async function findMembership(userId: string, workspaceSlug: string) {
     return db.membership.findFirst({
@@ -15,14 +15,10 @@ async function findMembership(userId: string, workspaceSlug: string) {
     })
 }
 
-export async function requireWorkspaceMember(
+export async function requireWorkspaceMemberPage(
     workspaceSlug: string,
 ): Promise<Membership> {
-    const user = await getCurrentUser()
-
-    if (!user) {
-        redirect('/login')
-    }
+    const user = await requireAuthPage()
 
     const membership = await findMembership(user.id, workspaceSlug)
 
@@ -33,20 +29,16 @@ export async function requireWorkspaceMember(
     return membership
 }
 
-export async function authorizeWorkspaceMember(
+export async function requireWorkspaceMemberAction(
     workspaceSlug: string,
 ): Promise<ActionResult<Membership>> {
-    const user = await getCurrentUser()
+    const authResult = await requireAuthAction()
 
-    if (!user) {
-        return {
-            success: false,
-            data: null,
-            message: 'Usuário não autenticado.',
-        }
+    if (!authResult.success) {
+        return authResult
     }
 
-    const membership = await findMembership(user.id, workspaceSlug)
+    const membership = await findMembership(authResult.data.id, workspaceSlug)
 
     if (!membership) {
         return {

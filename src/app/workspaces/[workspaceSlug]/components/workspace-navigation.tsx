@@ -1,19 +1,26 @@
 'use client'
 
-import { Home, LayoutGrid, Mail, Users } from 'lucide-react'
+import { LayoutGrid, Mail, Users } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { WorkspaceRole } from '@/generated/prisma/enums'
+import { useWorkspaceStore } from '@/store/workspace'
 
-type WorkspaceNavigationProps = {
-    workspaceSlug: string
-    role: WorkspaceRole
-}
+export function WorkspaceNavigation() {
+    const workspaceSlug = useWorkspaceStore((state) => state.workspaceSlug)
+    const role = useWorkspaceStore((state) => state.role)
 
-export function WorkspaceNavigation({ workspaceSlug, role }: WorkspaceNavigationProps) {
     const pathname = usePathname()
-    const canManageWorkspace = role === WorkspaceRole.OWNER || role === WorkspaceRole.ADMIN
+
+    if (workspaceSlug === null || role === null) {
+        return null
+    }
+
+    const canManageWorkspace =
+        role === WorkspaceRole.OWNER || role === WorkspaceRole.ADMIN
+
     const basePath = `/workspaces/${workspaceSlug}`
+
     const navigationItems = [
         {
             label: 'Visão geral',
@@ -21,12 +28,7 @@ export function WorkspaceNavigation({ workspaceSlug, role }: WorkspaceNavigation
             icon: LayoutGrid,
             exact: true,
         },
-       
-        {
-            label: 'Área comum',
-            href: `${basePath}/area-comum`,
-            icon: Home,
-        },
+
         {
             label: 'Membros',
             href: `${basePath}/members`,
@@ -49,7 +51,8 @@ export function WorkspaceNavigation({ workspaceSlug, role }: WorkspaceNavigation
                     .map((item) => {
                         const isActive = item.exact
                             ? pathname === item.href
-                            : pathname === item.href || pathname.startsWith(`${item.href}/`)
+                            : pathname === item.href ||
+                              pathname.startsWith(`${item.href}/`)
                         const Icon = item.icon
 
                         return (
@@ -69,7 +72,9 @@ export function WorkspaceNavigation({ workspaceSlug, role }: WorkspaceNavigation
                                         aria-hidden="true"
                                         className={[
                                             'size-4 shrink-0',
-                                            isActive ? 'text-accent-text' : 'text-text-muted',
+                                            isActive
+                                                ? 'text-accent-text'
+                                                : 'text-text-muted',
                                         ].join(' ')}
                                     />
                                     <span>{item.label}</span>

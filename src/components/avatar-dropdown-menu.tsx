@@ -11,6 +11,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { signOut } from '@/lib/auth'
 
 type AvatarDropdownMenuProps = {
     user: {
@@ -51,7 +52,10 @@ export function AvatarDropdownMenu({ user }: AvatarDropdownMenuProps) {
                 </button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent aria-label="Menu da conta" className="w-[260px]">
+            <DropdownMenuContent
+                aria-label="Menu da conta"
+                className="w-[260px]"
+            >
                 <div className="flex min-w-0 items-center gap-2.5 px-2.5 py-2">
                     <Avatar size="md" src={user.image} alt={accessibleName}>
                         {getInitials(user.name)}
@@ -72,21 +76,25 @@ export function AvatarDropdownMenu({ user }: AvatarDropdownMenuProps) {
 
                 <DropdownMenuItem asChild>
                     <Link href="/workspaces">
-                        <LayoutGrid aria-hidden="true" className="size-4 shrink-0 text-text-muted" />
+                        <LayoutGrid
+                            aria-hidden="true"
+                            className="size-4 shrink-0 text-text-muted"
+                        />
                         <span>Todos os workspaces</span>
                     </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
-                <form action={signOutAction}>
-                    <DropdownMenuItem asChild variant="danger">
-                        <button type="submit">
-                            <LogOut aria-hidden="true" className="size-4 shrink-0" />
-                            <span>Sair</span>
-                        </button>
-                    </DropdownMenuItem>
-                </form>
+                <DropdownMenuItem asChild variant="danger">
+                    <button type="button" onClick={() => signOutAction()}>
+                        <LogOut
+                            aria-hidden="true"
+                            className="size-4 shrink-0"
+                        />
+                        <span>Sair</span>
+                    </button>
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

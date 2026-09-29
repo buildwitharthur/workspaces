@@ -1,6 +1,6 @@
 import type { WorkspaceRole } from '@/generated/prisma/client'
 import { db } from '@/lib/db'
-import { requireAuthenticatedUser } from '@/lib/authentication'
+import { requireAuthPage } from '@/lib/authentication'
 
 export type WorkspaceListItem = {
     id: string
@@ -11,7 +11,7 @@ export type WorkspaceListItem = {
 }
 
 export async function getWorkspaces(): Promise<WorkspaceListItem[]> {
-    const user = await requireAuthenticatedUser()
+    const user = await requireAuthPage()
 
     const memberships = await db.membership.findMany({
         where: {

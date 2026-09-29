@@ -1,6 +1,6 @@
 'use client'
 
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { ChevronsUpDown } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -39,20 +39,27 @@ export function WorkspaceSelectData({
             <DropdownMenuTrigger>
                 <button
                     type="button"
-                    className="flex w-full items-center gap-2 rounded-md border border-line bg-surface p-2 text-left transition-colors hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-2"
+                    className="flex w-full items-center gap-3 rounded-md border border-line bg-surface p-2 text-left transition-colors hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-2 "
                 >
                     <span className="grid size-7 shrink-0 place-items-center rounded-sm bg-text text-xs font-semibold text-bg">
                         {getWorkspaceInitial(currentWorkspace.name)}
                     </span>
-                    <span className="flex min-w-0 flex-1 flex-col">
+                    <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                         <span className="truncate text-[13px] leading-5 font-semibold text-text">
                             {currentWorkspace.name}
                         </span>
-                        <Badge variant={roleVariants[currentWorkspace.role]} size="sm" mono>
+                        <Badge
+                            variant={roleVariants[currentWorkspace.role]}
+                            size="sm"
+                            mono
+                        >
                             {currentWorkspace.role}
                         </Badge>
                     </span>
-                    <ChevronsUpDown aria-hidden="true" className="size-4 shrink-0 text-text-muted" />
+                    <ChevronsUpDown
+                        aria-hidden="true"
+                        className="size-3.5 shrink-0 text-text-muted"
+                    />
                 </button>
             </DropdownMenuTrigger>
 
@@ -68,21 +75,27 @@ export function WorkspaceSelectData({
                             key={workspace.id}
                             checked={isCurrent}
                             onSelect={() => {
-                                if (!isCurrent) router.push(`/workspaces/${workspace.slug}`)
+                                if (!isCurrent)
+                                    router.push(`/workspaces/${workspace.slug}`)
                             }}
+                            className="rounded-sm p-2"
                         >
-                            <span className="grid size-7 shrink-0 place-items-center rounded-sm bg-text text-xs font-semibold text-bg">
+                            <span className="grid size-5.5 shrink-0 place-items-center bg-text text-xs font-semibold text-bg rounded-sm">
                                 {getWorkspaceInitial(workspace.name)}
                             </span>
-                            <span className="flex min-w-0 flex-1 flex-col">
-                                <span className="truncate">{workspace.name}</span>
-                                <Badge variant={roleVariants[workspace.role]} size="sm" mono>
+
+                            <span className="flex min-w-0 flex-1 justify-between">
+                                <span className="truncate">
+                                    {workspace.name}
+                                </span>
+                                <Badge
+                                    variant={roleVariants[workspace.role]}
+                                    size="sm"
+                                    mono
+                                >
                                     {workspace.role}
                                 </Badge>
                             </span>
-                            {isCurrent ? (
-                                <Check aria-hidden="true" className="size-4 shrink-0 text-text-muted" />
-                            ) : null}
                         </DropdownMenuItem>
                     )
                 })}

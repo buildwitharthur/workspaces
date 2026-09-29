@@ -1,10 +1,9 @@
-import type { PropsWithChildren, ReactNode } from 'react'
-import { requireAuthenticatedUser } from '@/lib/authentication'
+import type { PropsWithChildren } from 'react'
+import { requireAuthPage } from '@/lib/authentication'
 
 export default async function WorkspacesLayout({
     children,
 }: PropsWithChildren) {
-    await requireAuthenticatedUser()
-
+    await requireAuthPage()
     return children
 }

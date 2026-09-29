@@ -21,7 +21,10 @@ export function PendingInvitesData({
     return (
         <section className="mt-8" aria-labelledby="pending-invites-title">
             <div>
-                <h2 id="pending-invites-title" className="text-[15px] leading-5 font-semibold text-text">
+                <h2
+                    id="pending-invites-title"
+                    className="text-[15px] leading-5 font-semibold text-text"
+                >
                     Convites pendentes
                 </h2>
                 <p className="mt-1 text-sm leading-5 text-text-muted">
@@ -49,7 +52,11 @@ export function PendingInvitesData({
                                         ? `${invite.invitedByName} convidou você`
                                         : 'Você recebeu um convite'}
                                 </p>
-                                <Badge variant={roleVariants[invite.role]} size="sm" mono>
+                                <Badge
+                                    variant={roleVariants[invite.role]}
+                                    size="sm"
+                                    mono
+                                >
                                     {invite.role}
                                 </Badge>
                             </div>

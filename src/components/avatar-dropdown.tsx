@@ -1,8 +1,8 @@
 import { AvatarDropdownMenu } from '@/components/avatar-dropdown-menu'
-import { requireAuthenticatedUser } from '@/lib/authentication'
+import { requireAuthPage } from '@/lib/authentication'
 
 export async function AvatarDropdown() {
-    const user = await requireAuthenticatedUser()
+    const user = await requireAuthPage()
 
     return (
         <AvatarDropdownMenu

@@ -2,14 +2,15 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import type { ActionResult } from '@/types/action-result'
 import { User } from 'next-auth'
+import { cache } from 'react'
 
-export async function getCurrentUser() {
+export const getCurrentUser = cache(async () => {
     const session = await auth()
 
     return session?.user ?? null
-}
+})
 
-export async function requireAuthenticatedUser() {
+export async function requireAuthPage() {
     const user = await getCurrentUser()
 
     if (!user) {
@@ -19,7 +20,7 @@ export async function requireAuthenticatedUser() {
     return user
 }
 
-export async function authorizeAuthenticatedUser(): Promise<
+export async function requireAuthAction(): Promise<
     ActionResult<{ id: string } & User>
 > {
     const user = await getCurrentUser()

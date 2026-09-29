@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { WorkspaceRole } from '@/generated/prisma/enums'
 import { AvatarDropdown } from '@/components/avatar-dropdown'
 import { AvatarDropdownSkeleton } from '@/components/avatar-dropdown-skeleton'
 import { WorkspaceNavigation } from '@/app/workspaces/[workspaceSlug]/components/workspace-navigation'
@@ -10,19 +9,22 @@ import { WorkspaceSelectSkeleton } from '@/app/workspaces/[workspaceSlug]/compon
 
 export function WorkspaceSidebar({
     workspaceSlug,
-    role,
 }: {
     workspaceSlug: string
-    role: WorkspaceRole
 }) {
     return (
-        <aside className="flex min-h-dvh w-[220px] shrink-0 flex-col border-r border-line bg-bg">
+        <aside className="flex min-h-dvh w-[260px] shrink-0 flex-col border-r border-line bg-bg">
             <div className="p-4">
                 <Link
                     href="/workspaces"
                     className="flex items-center gap-2.5 text-text focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-4"
                 >
-                    <Image src="/assets/lab-logo.svg" alt="" width={22} height={24} />
+                    <Image
+                        src="/assets/lab-logo.svg"
+                        alt=""
+                        width={22}
+                        height={24}
+                    />
                     <span className="text-base leading-6 font-semibold tracking-[-0.01em]">
                         Workspace
                     </span>
@@ -36,7 +38,7 @@ export function WorkspaceSidebar({
             </div>
 
             <div className="mt-3 px-4">
-                <WorkspaceNavigation workspaceSlug={workspaceSlug} role={role} />
+                <WorkspaceNavigation />
             </div>
 
             <div className="flex-1" />

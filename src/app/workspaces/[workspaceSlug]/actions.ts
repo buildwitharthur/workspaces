@@ -2,12 +2,12 @@
 
 import type { Membership } from '@/generated/prisma/client'
 import type { ActionResult } from '@/types/action-result'
-import { authorizeWorkspaceMember } from '@/lib/workspace-authorization'
+import { requireWorkspaceMemberAction } from '@/lib/workspace-authorization'
 
 export async function updateWorkspace(
     workspaceSlug: string,
 ): Promise<ActionResult<Membership>> {
-    const authorization = await authorizeWorkspaceMember(workspaceSlug)
+    const authorization = await requireWorkspaceMemberAction(workspaceSlug)
 
     if (!authorization.success) {
         return authorization

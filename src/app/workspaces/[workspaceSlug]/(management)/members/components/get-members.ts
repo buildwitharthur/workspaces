@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { WorkspaceRole } from '@/generated/prisma/enums'
 import type { WorkspaceRole as WorkspaceRoleType } from '@/generated/prisma/enums'
 import { db } from '@/lib/db'
-import { requireWorkspaceMember } from '@/lib/workspace-authorization'
+import { requireWorkspaceMemberPage } from '@/lib/workspace-authorization'
 
 export type MemberListItem = {
     id: string
@@ -23,7 +23,7 @@ export type MembersResult = {
 export async function getMembers(
     workspaceSlug: string,
 ): Promise<MembersResult> {
-    const currentMembership = await requireWorkspaceMember(workspaceSlug)
+    const currentMembership = await requireWorkspaceMemberPage(workspaceSlug)
 
     if (
         currentMembership.role !== WorkspaceRole.OWNER &&

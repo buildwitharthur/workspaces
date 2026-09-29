@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { Prisma, WorkspaceRole } from '@/generated/prisma/client'
-import { authorizeAuthenticatedUser } from '@/lib/authentication'
+import { requireAuthAction } from '@/lib/authentication'
 import { db } from '@/lib/db'
 import type { ActionResult } from '@/types/action-result'
 import { createWorkspaceSchema, type CreateWorkspaceInput } from './schema'
@@ -16,7 +16,7 @@ type CreatedWorkspace = {
 export async function createWorkspace(
     input: CreateWorkspaceInput,
 ): Promise<ActionResult<CreatedWorkspace>> {
-    const authResult = await authorizeAuthenticatedUser()
+    const authResult = await requireAuthAction()
 
     if (!authResult.success) {
         return authResult
@@ -63,7 +63,10 @@ export async function createWorkspace(
             },
         }
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === 'P2002'
+        ) {
             return {
                 success: false,
                 data: null,

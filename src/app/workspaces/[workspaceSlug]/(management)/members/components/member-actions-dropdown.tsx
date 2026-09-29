@@ -2,6 +2,7 @@
 
 import { MoreHorizontal, Trash2, UserCog } from 'lucide-react'
 import { WorkspaceRole } from '@/generated/prisma/enums'
+import { useWorkspaceStore } from '@/store/workspace'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -17,13 +18,13 @@ type MemberActionsDropdownProps = {
         role: WorkspaceRole
         isCurrentUser: boolean
     }
-    currentUserRole: WorkspaceRole
 }
 
 export function MemberActionsDropdown({
     member,
-    currentUserRole,
 }: MemberActionsDropdownProps) {
+    const currentUserRole = useWorkspaceStore((state) => state.role)
+
     const canChangeRole =
         currentUserRole === WorkspaceRole.OWNER &&
         !member.isCurrentUser &&

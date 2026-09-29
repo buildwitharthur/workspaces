@@ -1,7 +1,7 @@
 import type { WorkspaceRole } from '@/generated/prisma/client'
 import { InviteStatus } from '@/generated/prisma/enums'
 import { db } from '@/lib/db'
-import { requireAuthenticatedUser } from '@/lib/authentication'
+import { requireAuthPage } from '@/lib/authentication'
 
 export type PendingInviteItem = {
     id: string
@@ -13,7 +13,7 @@ export type PendingInviteItem = {
 }
 
 export async function getPendingInvites(): Promise<PendingInviteItem[]> {
-    const user = await requireAuthenticatedUser()
+    const user = await requireAuthPage()
 
     if (!user.email) {
         return []

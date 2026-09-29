@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import type { InviteStatus, WorkspaceRole } from '@/generated/prisma/enums'
 import { WorkspaceRole as WorkspaceRoleEnum } from '@/generated/prisma/enums'
 import { db } from '@/lib/db'
-import { requireWorkspaceMember } from '@/lib/workspace-authorization'
+import { requireWorkspaceMemberPage } from '@/lib/workspace-authorization'
 
 export type InviteListItem = {
     id: string
@@ -13,8 +13,10 @@ export type InviteListItem = {
     expiresAt: Date
 }
 
-export async function getInvites(workspaceSlug: string): Promise<InviteListItem[]> {
-    const membership = await requireWorkspaceMember(workspaceSlug)
+export async function getInvites(
+    workspaceSlug: string,
+): Promise<InviteListItem[]> {
+    const membership = await requireWorkspaceMemberPage(workspaceSlug)
     const canManageInvites =
         membership.role === WorkspaceRoleEnum.OWNER ||
         membership.role === WorkspaceRoleEnum.ADMIN

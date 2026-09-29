@@ -3,11 +3,14 @@
 import { randomBytes } from 'node:crypto'
 import { revalidatePath } from 'next/cache'
 import { InviteStatus, WorkspaceRole } from '@/generated/prisma/enums'
-import { authorizeWorkspaceMember } from '@/lib/workspace-authorization'
+import { requireWorkspaceMemberAction } from '@/lib/workspace-authorization'
 import { db } from '@/lib/db'
 import { resend } from '@/lib/resend'
 import type { ActionResult } from '@/types/action-result'
-import { inviteMemberSchema, type InviteMemberInput } from './invite-member-schema'
+import {
+    inviteMemberSchema,
+    type InviteMemberInput,
+} from './invite-member-schema'
 
 type CreatedInvite = {
     id: string
@@ -20,7 +23,7 @@ export async function createInvite(
     workspaceSlug: string,
     input: InviteMemberInput,
 ): Promise<ActionResult<CreatedInvite>> {
-    const membershipResult = await authorizeWorkspaceMember(workspaceSlug)
+    const membershipResult = await requireWorkspaceMemberAction(workspaceSlug)
 
     if (!membershipResult.success) {
         return membershipResult

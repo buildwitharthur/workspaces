@@ -17,8 +17,12 @@ export default function Page() {
                     <h1 className="text-2xl leading-8 font-semibold tracking-[-0.015em] text-text">
                         Confira seu e-mail
                     </h1>
-                    <p className="mt-1.5 text-text-muted">Enviamos um link de acesso para o seu e-mail.</p>
-                    <p className="mt-1.5 text-text-muted">Você pode fechar esta página depois de abrir o link.</p>
+                    <p className="mt-1.5 text-text-muted">
+                        Enviamos um link de acesso para o seu e-mail.
+                    </p>
+                    <p className="mt-1.5 text-text-muted">
+                        Você pode fechar esta página depois de abrir o link.
+                    </p>
                     <Link
                         href="/login"
                         className="mt-6 inline-flex h-control-lg items-center justify-center rounded-pill border border-line bg-surface px-5 text-sm leading-5 font-medium text-text-2 transition-[background-color,border-color,color] duration-150 hover:border-line-strong hover:text-text focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-2"
@@ -35,9 +39,18 @@ export default function Page() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-[13px] leading-5 text-text-subtle opacity-75 transition-[opacity,color] duration-150 hover:text-text-muted hover:opacity-100 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-text focus-visible:outline-offset-4"
                 >
-                    <Image src="/assets/lab-logo.svg" alt="" width={16} height={18} className="h-[18px] w-4" />
+                    <Image
+                        src="/assets/lab-logo.svg"
+                        alt=""
+                        width={16}
+                        height={18}
+                        className="h-[18px] w-4"
+                    />
                     <span>
-                        um experimento <strong className="font-semibold text-text-muted">ArthurLabs</strong>
+                        um experimento{' '}
+                        <strong className="font-semibold text-text-muted">
+                            ArthurLabs
+                        </strong>
                     </span>
                 </a>
             </footer>

@@ -6,8 +6,11 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { WorkspaceRole } from '@/generated/prisma/enums'
-import { createInvite } from '@/app/workspaces/[workspaceSlug]/invites/components/create-invite'
-import { inviteMemberSchema, type InviteMemberInput } from '@/app/workspaces/[workspaceSlug]/invites/components/invite-member-schema'
+import { createInvite } from '@/app/workspaces/[workspaceSlug]/(management)/invites/components/create-invite'
+import {
+    inviteMemberSchema,
+    type InviteMemberInput,
+} from '@/app/workspaces/[workspaceSlug]/(management)/invites/components/invite-member-schema'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -24,20 +27,20 @@ import { Field } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
+import { useWorkspaceStore } from '@/store/workspace'
 
-export function InviteMemberDialog({
-    workspaceSlug,
-    role,
-}: {
-    workspaceSlug: string
-    role: WorkspaceRole
-}) {
+export function InviteMemberDialog() {
     const router = useRouter()
+    const workspaceSlug = useWorkspaceStore((state) => state.workspaceSlug)
+    const role = useWorkspaceStore((state) => state.role)
+
     const [open, setOpen] = useState(false)
     const availableRoles =
-        role === WorkspaceRole.OWNER
-            ? [WorkspaceRole.MEMBER, WorkspaceRole.ADMIN]
-            : [WorkspaceRole.MEMBER]
+        role === null
+            ? []
+            : role === WorkspaceRole.OWNER
+              ? [WorkspaceRole.MEMBER, WorkspaceRole.ADMIN]
+              : [WorkspaceRole.MEMBER]
     const {
         register,
         handleSubmit,
@@ -63,6 +66,14 @@ export function InviteMemberDialog({
 
     const onSubmit = async (values: InviteMemberInput) => {
         clearErrors('root.server')
+
+        if (!workspaceSlug) {
+            setError('root.server', {
+                type: 'client',
+                message: 'O workspace atual não está disponível.',
+            })
+            return
+        }
 
         const result = await createInvite(workspaceSlug, values)
 
@@ -92,13 +103,18 @@ export function InviteMemberDialog({
                 <DialogHeader>
                     <DialogTitle>Convidar membro</DialogTitle>
                     <DialogDescription>
-                        A pessoa receberá um convite para participar deste workspace.
+                        A pessoa receberá um convite para participar deste
+                        workspace.
                     </DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogBody>
-                        <Field label="E-mail" htmlFor="invite-email" error={errors.email?.message}>
+                        <Field
+                            label="E-mail"
+                            htmlFor="invite-email"
+                            error={errors.email?.message}
+                        >
                             <Input
                                 id="invite-email"
                                 type="email"
@@ -113,7 +129,11 @@ export function InviteMemberDialog({
                             />
                         </Field>
 
-                        <Field label="Role" htmlFor="invite-role" error={errors.role?.message}>
+                        <Field
+                            label="Role"
+                            htmlFor="invite-role"
+                            error={errors.role?.message}
+                        >
                             <Select
                                 id="invite-role"
                                 aria-invalid={!!errors.role}
@@ -121,7 +141,10 @@ export function InviteMemberDialog({
                                 {...register('role')}
                             >
                                 {availableRoles.map((availableRole) => (
-                                    <option key={availableRole} value={availableRole}>
+                                    <option
+                                        key={availableRole}
+                                        value={availableRole}
+                                    >
                                         {availableRole}
                                     </option>
                                 ))}
@@ -129,7 +152,10 @@ export function InviteMemberDialog({
                         </Field>
 
                         {errors.root?.server?.message ? (
-                            <p role="alert" className="text-[13px] leading-5 text-danger-text">
+                            <p
+                                role="alert"
+                                className="text-[13px] leading-5 text-danger-text"
+                            >
                                 {errors.root.server.message}
                             </p>
                         ) : null}
@@ -141,7 +167,11 @@ export function InviteMemberDialog({
                                 Cancelar
                             </Button>
                         </DialogClose>
-                        <Button variant="primary" type="submit" disabled={isSubmitting}>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
                             {isSubmitting ? (
                                 <>
                                     <Spinner />

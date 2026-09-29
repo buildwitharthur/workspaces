@@ -6,14 +6,14 @@ import { db } from '@/lib/db'
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
     secret: process.env.AUTH_SECRET,
-    trustHost: true,
+
     adapter: PrismaAdapter(db),
-    session: {
-        strategy: 'database',
-    },
+
     pages: {
         signIn: '/login',
         verifyRequest: '/login/verify-request',
+        newUser: '/workspaces',
+        signOut: '/login',
     },
     providers: [
         Google({
