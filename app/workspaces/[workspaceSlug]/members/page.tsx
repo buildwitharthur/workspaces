@@ -1,3 +1,3 @@
 export default function Page() {
-    return <main>Workspace</main>
+    return <main>Members</main>
 }
