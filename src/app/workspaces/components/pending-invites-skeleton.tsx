@@ -1,5 +1,9 @@
 function SkeletonBar({ className }: { className: string }) {
-    return <span className={`block animate-pulse rounded bg-surface-raised ${className}`} />
+    return (
+        <span
+            className={`block animate-pulse rounded bg-surface-raised ${className}`}
+        />
+    )
 }
 
 export function PendingInvitesSkeleton() {
@@ -16,7 +20,11 @@ export function PendingInvitesSkeleton() {
                     >
                         <SkeletonBar className="size-7 shrink-0 rounded-sm" />
                         <div className="min-w-0 flex-1">
-                            <SkeletonBar className={index === 0 ? 'h-4 w-32' : 'h-4 w-40'} />
+                            <SkeletonBar
+                                className={
+                                    index === 0 ? 'h-4 w-32' : 'h-4 w-40'
+                                }
+                            />
                             <SkeletonBar className="mt-2 h-4 w-52 max-w-full" />
                         </div>
                         <SkeletonBar className="h-[18px] w-16 shrink-0 rounded-pill" />

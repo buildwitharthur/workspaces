@@ -21,7 +21,10 @@ export async function getPendingInvites(): Promise<PendingInviteItem[]> {
 
     const invites = await db.invite.findMany({
         where: {
-            email: user.email,
+            email: {
+                equals: user.email.trim(),
+                mode: 'insensitive',
+            },
             status: InviteStatus.PENDING,
             expiresAt: {
                 gt: new Date(),

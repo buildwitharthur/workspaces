@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { WorkspaceRole } from '@/generated/prisma/enums'
 import type { PendingInviteItem } from '@/app/workspaces/components/get-pending-invites'
+import { AcceptInviteButton } from '@/app/workspaces/components/accept-invite-button'
 
 const roleVariants: Record<WorkspaceRole, 'success' | 'info' | 'neutral'> = {
     [WorkspaceRole.OWNER]: 'success',
@@ -66,9 +67,7 @@ export function PendingInvitesData({
                             <Button variant="text" size="sm">
                                 Recusar
                             </Button>
-                            <Button variant="primary" size="sm">
-                                Aceitar
-                            </Button>
+                            <AcceptInviteButton inviteId={invite.id} />
                         </div>
                     </div>
                 ))}

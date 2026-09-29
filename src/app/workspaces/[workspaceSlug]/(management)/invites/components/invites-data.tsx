@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import type { InviteListItem } from '@/app/workspaces/[workspaceSlug]/(management)/invites/components/get-invites'
+import { RevokeInviteButton } from './revoke-invite-button'
 
 const roleVariants = {
     OWNER: 'success',
@@ -19,7 +20,13 @@ function formatDate(date: Date) {
     return new Intl.DateTimeFormat('pt-BR').format(date)
 }
 
-export function InvitesData({ invites }: { invites: InviteListItem[] }) {
+export function InvitesData({
+    invites,
+    workspaceSlug,
+}: {
+    invites: InviteListItem[]
+    workspaceSlug: string
+}) {
     return (
         <div className="mt-8 overflow-x-auto rounded-lg border border-line bg-surface">
             <table className="w-full min-w-[640px] border-collapse">
@@ -55,13 +62,19 @@ export function InvitesData({ invites }: { invites: InviteListItem[] }) {
                         >
                             Expira em
                         </th>
+                        <th
+                            scope="col"
+                            className="px-4 py-2.5 text-right text-xs leading-4 font-medium text-text-muted"
+                        >
+                            Ações
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     {invites.length === 0 ? (
                         <tr>
                             <td
-                                colSpan={5}
+                                colSpan={6}
                                 className="px-4 py-7 text-center text-sm text-text-muted"
                             >
                                 Nenhum convite neste workspace.
@@ -99,6 +112,14 @@ export function InvitesData({ invites }: { invites: InviteListItem[] }) {
                                 </td>
                                 <td className="px-4 py-3 text-sm leading-5 text-text-muted">
                                     {formatDate(invite.expiresAt)}
+                                </td>
+                                <td className="px-4 py-3 text-right">
+                                    {invite.status === 'PENDING' ? (
+                                        <RevokeInviteButton
+                                            workspaceSlug={workspaceSlug}
+                                            inviteId={invite.id}
+                                        />
+                                    ) : null}
                                 </td>
                             </tr>
                         ))

@@ -8,5 +8,5 @@ export async function InvitesList({
 }) {
     const invites = await getInvites(workspaceSlug)
 
-    return <InvitesData invites={invites} />
+    return <InvitesData invites={invites} workspaceSlug={workspaceSlug} />
 }

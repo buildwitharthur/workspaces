@@ -14,12 +14,20 @@ function getWorkspaceInitial(name: string) {
     return name.trim().charAt(0).toUpperCase() || '?'
 }
 
-export function WorkspacesData({ workspaces }: { workspaces: WorkspaceListItem[] }) {
+export function WorkspacesData({
+    workspaces,
+}: {
+    workspaces: WorkspaceListItem[]
+}) {
     if (workspaces.length === 0) {
         return (
             <div className="mt-6 rounded-lg border border-line bg-surface px-4 py-7 text-center">
-                <p className="text-sm text-text-muted">Você ainda não participa de nenhum workspace.</p>
-                <p className="mt-1 text-[13px] leading-5 text-text-subtle">Crie um workspace para começar.</p>
+                <p className="text-sm text-text-muted">
+                    Você ainda não participa de nenhum workspace.
+                </p>
+                <p className="mt-1 text-[13px] leading-5 text-text-subtle">
+                    Crie um workspace para começar.
+                </p>
             </div>
         )
     }
@@ -48,10 +56,17 @@ export function WorkspacesData({ workspaces }: { workspaces: WorkspaceListItem[]
                         </span>
                     </span>
 
-                    <Badge variant={roleVariants[workspace.role]} size="sm" mono>
+                    <Badge
+                        variant={roleVariants[workspace.role]}
+                        size="sm"
+                        mono
+                    >
                         {workspace.role}
                     </Badge>
-                    <ArrowRight aria-hidden="true" className="size-4 shrink-0 text-text-muted" />
+                    <ArrowRight
+                        aria-hidden="true"
+                        className="size-4 shrink-0 text-text-muted"
+                    />
                 </Link>
             ))}
         </div>

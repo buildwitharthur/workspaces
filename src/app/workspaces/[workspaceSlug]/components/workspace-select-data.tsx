@@ -1,12 +1,14 @@
 'use client'
 
-import { ChevronsUpDown } from 'lucide-react'
+import { LayoutGrid, ChevronsUpDown } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import type { WorkspaceOption } from '@/app/workspaces/[workspaceSlug]/components/get-workspace-options'
@@ -99,6 +101,18 @@ export function WorkspaceSelectData({
                         </DropdownMenuItem>
                     )
                 })}
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild className="rounded-sm p-2">
+                    <Link href="/workspaces">
+                        <LayoutGrid
+                            aria-hidden="true"
+                            className="size-4 shrink-0 text-text-muted"
+                        />
+                        <span>Todos os workspaces</span>
+                    </Link>
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

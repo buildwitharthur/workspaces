@@ -6,7 +6,10 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { createWorkspace } from '@/app/workspaces/actions'
-import { createWorkspaceSchema, type CreateWorkspaceInput } from '@/app/workspaces/schema'
+import {
+    createWorkspaceSchema,
+    type CreateWorkspaceInput,
+} from '@/app/workspaces/schema'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -38,6 +41,7 @@ export function CreateWorkspaceDialog() {
     const router = useRouter()
     const [open, setOpen] = useState(false)
     const [slugTouched, setSlugTouched] = useState(false)
+    
     const {
         register,
         handleSubmit,
@@ -73,7 +77,10 @@ export function CreateWorkspaceDialog() {
             if (result.message === 'Este slug já está em uso.') {
                 setError('slug', { type: 'server', message: result.message })
             } else {
-                setError('root.server', { type: 'server', message: result.message })
+                setError('root.server', {
+                    type: 'server',
+                    message: result.message,
+                })
             }
             return
         }
@@ -118,9 +125,13 @@ export function CreateWorkspaceDialog() {
                                 {...register('name', {
                                     onChange: (event) => {
                                         if (!slugTouched) {
-                                            setValue('slug', slugify(event.target.value), {
-                                                shouldValidate: true,
-                                            })
+                                            setValue(
+                                                'slug',
+                                                slugify(event.target.value),
+                                                {
+                                                    shouldValidate: true,
+                                                },
+                                            )
                                         }
                                     },
                                 })}
@@ -130,7 +141,11 @@ export function CreateWorkspaceDialog() {
                         <Field
                             label="Slug"
                             htmlFor="workspace-slug"
-                            description={errors.slug ? undefined : 'Letras minúsculas, números e hífen.'}
+                            description={
+                                errors.slug
+                                    ? undefined
+                                    : 'Letras minúsculas, números e hífen.'
+                            }
                             error={errors.slug?.message}
                         >
                             <div className="flex overflow-hidden rounded-md border border-line bg-surface transition-[border-color,box-shadow] duration-150 focus-within:border-brand-600 focus-within:shadow-[var(--shadow-focus)]">
@@ -156,7 +171,10 @@ export function CreateWorkspaceDialog() {
                         </Field>
 
                         {errors.root?.server?.message ? (
-                            <p role="alert" className="text-[13px] leading-5 text-danger-text">
+                            <p
+                                role="alert"
+                                className="text-[13px] leading-5 text-danger-text"
+                            >
                                 {errors.root.server.message}
                             </p>
                         ) : null}
@@ -168,7 +186,11 @@ export function CreateWorkspaceDialog() {
                                 Cancelar
                             </Button>
                         </DialogClose>
-                        <Button variant="primary" type="submit" disabled={isSubmitting}>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
                             {isSubmitting ? (
                                 <>
                                     <Spinner />
