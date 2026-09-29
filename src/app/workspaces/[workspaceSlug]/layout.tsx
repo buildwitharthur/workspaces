@@ -12,12 +12,16 @@ export default async function WorkspaceLayout({
 }) {
     const { workspaceSlug } = await params
 
-    await requireWorkspaceMember(workspaceSlug)
+    const membership = await requireWorkspaceMember(workspaceSlug)
     const user = await requireAuthenticatedUser()
 
     return (
         <div className="flex min-h-dvh bg-bg">
-            <WorkspaceSidebar user={user} workspaceSlug={workspaceSlug} />
+            <WorkspaceSidebar
+                user={user}
+                workspaceSlug={workspaceSlug}
+                role={membership.role}
+            />
             <main className="min-w-0 flex-1">{children}</main>
         </div>
     )

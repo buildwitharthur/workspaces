@@ -1,7 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import type { WorkspaceRole } from '@/generated/prisma/enums'
 import { Avatar } from '@/components/ui/avatar'
+import { WorkspaceNavigation } from '@/app/workspaces/[workspaceSlug]/components/workspace-navigation'
 import { WorkspaceSelect } from '@/app/workspaces/[workspaceSlug]/components/workspace-select'
 import { WorkspaceSelectSkeleton } from '@/app/workspaces/[workspaceSlug]/components/workspace-select-skeleton'
 
@@ -28,7 +30,8 @@ function getInitials(name?: string | null) {
 export function WorkspaceSidebar({
     user,
     workspaceSlug,
-}: WorkspaceSidebarProps & { workspaceSlug: string }) {
+    role,
+}: WorkspaceSidebarProps & { workspaceSlug: string; role: WorkspaceRole }) {
     return (
         <aside className="flex min-h-dvh w-[220px] shrink-0 flex-col border-r border-line bg-bg">
             <div className="p-4">
@@ -47,6 +50,10 @@ export function WorkspaceSidebar({
                 <Suspense fallback={<WorkspaceSelectSkeleton />}>
                     <WorkspaceSelect workspaceSlug={workspaceSlug} />
                 </Suspense>
+            </div>
+
+            <div className="mt-3 px-4">
+                <WorkspaceNavigation workspaceSlug={workspaceSlug} role={role} />
             </div>
 
             <div className="flex-1" />
