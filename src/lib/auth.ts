@@ -5,6 +5,8 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import { db } from '@/lib/db'
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
+    secret: process.env.AUTH_SECRET,
+    trustHost: true,
     adapter: PrismaAdapter(db),
     session: {
         strategy: 'database',
