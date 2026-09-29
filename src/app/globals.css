@@ -21,14 +21,18 @@
     --success: #00e676;
     --warning: #f5b84b;
     --danger: #ff6577;
+    --danger-text: #b4233a;
+    --danger-strong: #ff4f63;
     --info: #7da7ff;
     --tint-success: #defced;
     --tint-warning: #fef6e8;
+    --tint-info: #eef4ff;
     --tint-neutral: #eff0ef;
     --tint-danger: #ffebed;
     --scrim: rgba(3, 5, 4, 0.4);
     --shadow-focus: 0 0 0 4px rgba(0, 230, 118, 0.18);
     --shadow-modal: 0 16px 48px rgba(3, 5, 4, 0.16);
+    --shadow-popover: 0 8px 24px rgba(3, 5, 4, 0.1);
     --code-keyword: #00753a;
     --code-string: #8a5a00;
     --code-fn: #2f5bd3;
@@ -79,6 +83,12 @@
     --blur-glass: 16px;
     --blur-glow: 80px;
     --content-width: 680px;
+    --control-sm: 32px;
+    --control-md: 36px;
+    --control-lg: 44px;
+    --modal-width: 440px;
+    --toast-bg: #1b251d;
+    --toast-text: #f3f5f1;
     color-scheme: light;
 }
 
@@ -94,6 +104,7 @@
         --text-muted: #aeb7b1;
         --text-subtle: #828c85;
         --accent-text: #35f27c;
+        --danger-text: #ff6577;
         --glass: rgba(9, 13, 10, 0.72);
         --glow: rgba(0, 230, 118, 0.35);
         --code-keyword: #72fda1;
@@ -103,10 +114,12 @@
         --code-highlight: rgba(0, 230, 118, 0.08);
         --tint-success: #082918;
         --tint-warning: #282312;
+        --tint-info: #18212a;
         --tint-neutral: #191e1a;
         --tint-danger: #291818;
         --scrim: rgba(0, 0, 0, 0.6);
         --shadow-modal: 0 16px 48px rgba(0, 0, 0, 0.6);
+        --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.5);
         --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 32px rgba(0, 0, 0, 0.45);
         color-scheme: dark;
     }
@@ -123,6 +136,7 @@
     --text-muted: #aeb7b1;
     --text-subtle: #828c85;
     --accent-text: #35f27c;
+    --danger-text: #ff6577;
     --glass: rgba(9, 13, 10, 0.72);
     --glow: rgba(0, 230, 118, 0.35);
     --code-keyword: #72fda1;
@@ -132,10 +146,12 @@
     --code-highlight: rgba(0, 230, 118, 0.08);
     --tint-success: #082918;
     --tint-warning: #282312;
+    --tint-info: #18212a;
     --tint-neutral: #191e1a;
     --tint-danger: #291818;
     --scrim: rgba(0, 0, 0, 0.6);
     --shadow-modal: 0 16px 48px rgba(0, 0, 0, 0.6);
+    --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.5);
     --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 32px rgba(0, 0, 0, 0.45);
     color-scheme: dark;
 }
@@ -161,12 +177,20 @@
     --color-success: var(--success);
     --color-warning: var(--warning);
     --color-danger: var(--danger);
+    --color-danger-text: var(--danger-text);
+    --color-danger-strong: var(--danger-strong);
     --color-info: var(--info);
     --color-tint-success: var(--tint-success);
     --color-tint-warning: var(--tint-warning);
+    --color-tint-info: var(--tint-info);
     --color-tint-neutral: var(--tint-neutral);
     --color-tint-danger: var(--tint-danger);
     --color-scrim: var(--scrim);
+    --color-toast-bg: var(--toast-bg);
+    --color-toast-text: var(--toast-text);
+    --spacing-control-sm: var(--control-sm);
+    --spacing-control-md: var(--control-md);
+    --spacing-control-lg: var(--control-lg);
     --color-code-keyword: var(--code-keyword);
     --color-code-string: var(--code-string);
     --color-code-fn: var(--code-fn);
@@ -281,5 +305,38 @@
 
     *::-webkit-scrollbar-corner {
         background: var(--bg);
+    }
+}
+
+@keyframes ui-rise {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes ui-pop {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes ui-toast-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 8px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
     }
 }
