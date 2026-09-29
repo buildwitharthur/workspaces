@@ -23,7 +23,7 @@ export default async function Page({
 
     return (
         <div className="mx-auto w-full max-w-5xl px-6 py-12">
-            <InvitesHeader role={membership.role} />
+            <InvitesHeader workspaceSlug={workspaceSlug} role={membership.role} />
             <Suspense fallback={<InvitesListSkeleton />}>
                 <InvitesList workspaceSlug={workspaceSlug} />
             </Suspense>
