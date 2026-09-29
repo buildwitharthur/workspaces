@@ -22,7 +22,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
     return (
-        <html lang="pt-BR" className={`${geistSans.variable} ${jetbrainsMono.variable}`}>
+        <html
+            lang="pt-BR"
+            className={`${geistSans.variable} ${jetbrainsMono.variable}`}
+        >
             <body>{children}</body>
         </html>
     )
