@@ -17,7 +17,7 @@ export default async function WorkspaceLayout({
 
     return (
         <div className="flex min-h-dvh bg-bg">
-            <WorkspaceSidebar user={user} />
+            <WorkspaceSidebar user={user} workspaceSlug={workspaceSlug} />
             <main className="min-w-0 flex-1">{children}</main>
         </div>
     )

@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge'
 
 const badgeVariants = tv({
     base: [
-        'inline-flex items-center gap-1.5 rounded-pill',
+        'inline-flex items-center gap-1.5 rounded-pill w-fit font-mono',
         'h-[22px] px-[9px] pl-2 text-xs leading-none font-medium whitespace-nowrap text-text-2',
         'before:size-1.5 before:shrink-0 before:rounded-full before:content-[""]',
     ],

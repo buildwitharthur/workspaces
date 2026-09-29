@@ -1,6 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { Avatar } from '@/components/ui/avatar'
+import { WorkspaceSelect } from '@/app/workspaces/[workspaceSlug]/components/workspace-select'
+import { WorkspaceSelectSkeleton } from '@/app/workspaces/[workspaceSlug]/components/workspace-select-skeleton'
 
 type WorkspaceSidebarProps = {
     user: {
@@ -22,7 +25,10 @@ function getInitials(name?: string | null) {
         : '?'
 }
 
-export function WorkspaceSidebar({ user }: WorkspaceSidebarProps) {
+export function WorkspaceSidebar({
+    user,
+    workspaceSlug,
+}: WorkspaceSidebarProps & { workspaceSlug: string }) {
     return (
         <aside className="flex min-h-dvh w-[220px] shrink-0 flex-col border-r border-line bg-bg">
             <div className="p-4">
@@ -35,6 +41,12 @@ export function WorkspaceSidebar({ user }: WorkspaceSidebarProps) {
                         Workspace
                     </span>
                 </Link>
+            </div>
+
+            <div className="px-4">
+                <Suspense fallback={<WorkspaceSelectSkeleton />}>
+                    <WorkspaceSelect workspaceSlug={workspaceSlug} />
+                </Suspense>
             </div>
 
             <div className="flex-1" />
