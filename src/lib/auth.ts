@@ -11,6 +11,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     pages: {
         signIn: '/login',
+        verifyRequest: '/login/verify-request',
     },
     providers: [
         Google({
