@@ -135,7 +135,7 @@ export function CreateWorkspaceDialog() {
                         >
                             <div className="flex overflow-hidden rounded-md border border-line bg-surface transition-[border-color,box-shadow] duration-150 focus-within:border-brand-600 focus-within:shadow-[var(--shadow-focus)]">
                                 <span className="flex shrink-0 items-center border-r border-line bg-surface-raised px-3 font-mono text-xs text-text-muted">
-                                    workspace.app/
+                                    workspaces/
                                 </span>
                                 <Input
                                     id="workspace-slug"
